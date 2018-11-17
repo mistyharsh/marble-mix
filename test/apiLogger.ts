@@ -1,26 +1,28 @@
-import { printAPIEffects } from '../src/effectLogger';
 import { RouteEffect, RouteEffectGroup } from '@marblejs/core';
 
-const x: (RouteEffect | RouteEffectGroup)[] = [
+import { printAPIEffects } from '../src/effectLogger';
+
+const x: any[] = [
+
     { path: '/', method: 'GET', middlewares: [], effect: () => {} },
 
-    { path: '/user', middlewares: [], effects: [
+    { path: '/users', middlewares: [], effects: [
         { path: '/', method: 'GET', effect: () => {} },
         { path: '/', method: 'POST', effect: () => {} } ,
 
         { path: '/user', middlewares: [], effects: [
             { path: '/', method: 'GET', effect: () => {} },
-            { path: '/', method: 'POST', effect: () => {} } ],
+            { path: '/', method: 'PUT', effect: () => {} } ]
         }]
     },
 
     { path: '/api', middlewares: [], effects: [
         { path: '/', method: 'GET', effect: () => {} },
-        { path: '/', method: 'POST', effect: () => {} } ,
+        { path: '/', method: 'DELETE', effect: () => {} } ,
 
         { path: '/user', middlewares: [], effects: [
             { path: '/', method: 'GET', effect: () => {} },
-            { path: '/', method: 'POST', effect: () => {} } ],
+            { path: '/', method: 'POST', effect: () => {} } ]
         }]
     }
 ];

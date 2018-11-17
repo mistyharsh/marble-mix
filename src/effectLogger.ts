@@ -1,6 +1,8 @@
 import * as path from 'path';
 
 import { RouteEffect, RouteEffectGroup } from '@marblejs/core';
+
+import chalk from 'chalk';
 import { table } from 'table';
 
 type Route = RouteEffect | RouteEffectGroup;
@@ -15,8 +17,9 @@ export function printAPIEffects(effects: Routes) {
     const flattenedRoutes = flatten(effects);
     flattenedRoutes.sort((x, y) => sortPaths(x.path, y.path));
 
-    const printData = flattenedRoutes.map((x) => ([x.method, x.path]));
+    const printData = flattenedRoutes.map((x) => ([getMethod(x.method), x.path]));
 
+    // tslint:disable-next-line:no-console
     console.log(table(printData));
 
     return flattenedRoutes;
@@ -46,4 +49,18 @@ function sortPaths(a: string, b: string) {
     a = a.toLowerCase();
     b = b.toLowerCase();
     return a > b ? 1 : b > a ? -1 : 0;
+}
+
+function getMethod(x: string) {
+    if (x === 'GET') {
+        return chalk.green(x);
+    } else if (x === 'POST') {
+        return chalk.yellow(x);
+    } else if (x === 'PUT') {
+        return chalk.blue(x);
+    } else if (x === 'DELETE') {
+        return chalk.red(x);
+    } else {
+        return x;
+    }
 }

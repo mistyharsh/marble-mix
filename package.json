@@ -1,40 +1,47 @@
 {
-  "name": "marble-mix",
-  "version": "0.0.1",
-  "description": "Utilities for Marble.js",
-  "main": "index.js",
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w",
-    "dev:start": "nodemon ./dist/server.js",
-    "lint": "tslint -c tslint.json -p tsconfig.json 'src/**/*.ts'",
-    "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mistyharsh/marble-mix.git"
-  },
-  "author": "Harshal Patil",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mistyharsh/marble-mix/issues"
-  },
-  "homepage": "https://github.com/mistyharsh/marble-mix#readme",
-  "dependencies": {
-    "chalk": "^2.4.1",
-    "table": "^5.1.0"
-  },
-  "peerDependencies": {
-    "@marblejs/core": "*"
-  },
-  "devDependencies": {
-    "@types/jest": "^23.3.9",
-    "@types/node": "^10.12.9",
-    "@types/table": "^4.0.5",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.4",
-    "tslint": "^5.11.0",
-    "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.1.6"
-  }
+    "name": "marble-mix",
+    "version": "0.0.1",
+    "description": "Utilities for Marble.js",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc -w",
+        "dev:start": "nodemon ./dist/server.js",
+        "lint": "tslint -c tslint.json -p tsconfig.json 'src/**/*.ts'",
+        "test": "jest",
+        "peer": "npm install --no-save @marblejs/core rxjs"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mistyharsh/marble-mix.git"
+    },
+    "author": "Harshal Patil",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mistyharsh/marble-mix/issues"
+    },
+    "homepage": "https://github.com/mistyharsh/marble-mix#readme",
+
+    "dependencies": {
+        "chalk": "^2.4.1",
+        "table": "^5.1.0"
+    },
+
+    "peerDependencies": {
+        "@marblejs/core": "*",
+        "rxjs": "*"
+    },
+
+    "devDependencies": {
+        "@types/jest": "^23.3.9",
+        "@types/node": "^10.12.9",
+        "@types/table": "^4.0.5",
+        "jest": "^23.6.0",
+        "rxjs-tslint": "^0.1.5",
+        "ts-jest": "^23.10.4",
+        "tslint": "^5.11.0",
+        "tslint-eslint-rules": "^5.4.0",
+        "typescript": "^3.1.6"
+    }
 }
