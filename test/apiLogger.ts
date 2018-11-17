@@ -1,33 +1,50 @@
-import { RouteEffect, RouteEffectGroup } from '@marblejs/core';
+import { EffectFactory } from '@marblejs/core';
+import { mapTo } from 'rxjs/operators';
 
 import { printAPIEffects } from '../src/effectLogger';
 
-const x: any[] = [
+// const x: any[] = [
 
-    { path: '/', method: 'GET', middlewares: [], effect: () => {} },
+//     { path: '/', method: 'GET', middlewares: [], effect: () => {} },
 
-    { path: '/users', middlewares: [], effects: [
-        { path: '/', method: 'GET', effect: () => {} },
-        { path: '/', method: 'POST', effect: () => {} } ,
+//     { path: '/users', middlewares: [], effects: [
+//         { path: '/', method: 'GET', effect: () => {} },
+//         { path: '/', method: 'POST', effect: () => {} } ,
 
-        { path: '/user', middlewares: [], effects: [
-            { path: '/', method: 'GET', effect: () => {} },
-            { path: '/', method: 'PUT', effect: () => {} } ]
-        }]
-    },
+//         { path: '/user', middlewares: [], effects: [
+//             { path: '/', method: 'GET', effect: () => {} },
+//             { path: '/', method: 'PUT', effect: () => {} } ]
+//         }]
+//     },
 
-    { path: '/api', middlewares: [], effects: [
-        { path: '/', method: 'GET', effect: () => {} },
-        { path: '/', method: 'DELETE', effect: () => {} } ,
+//     { path: '/api', middlewares: [], effects: [
+//         { path: '/', method: 'GET', effect: () => {} },
+//         { path: '/', method: 'DELETE', effect: () => {} } ,
 
-        { path: '/user', middlewares: [], effects: [
-            { path: '/', method: 'GET', effect: () => {} },
-            { path: '/', method: 'POST', effect: () => {} } ]
-        }]
-    }
-];
+//         { path: '/user', middlewares: [], effects: [
+//             { path: '/', method: 'GET', effect: () => {} },
+//             { path: '/', method: 'POST', effect: () => {} } ]
+//         }]
+//     }
+// ];
 
-test('adds 1 + 2 to equal 3', () => {
-    printAPIEffects(x);
-    expect(3).toBe(3);
+test('Simple API Endpoint effects', () => {
+
+    const route1 = EffectFactory
+        .matchPath('/')
+        .matchType('GET')
+        .use((req$) => req$.pipe(
+            mapTo({ body: {} })));
+
+    const route2 = EffectFactory
+            .matchPath('/users')
+            .matchType('GET')
+            .use((req$) => req$.pipe(
+                mapTo({ body: {} })));
+
+    const routeEffects = [route1, route2];
+
+    const routes = printAPIEffects(routeEffects);
+
+    expect(routes.length).toBe(2);
 });
