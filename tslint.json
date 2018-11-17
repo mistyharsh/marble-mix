@@ -1,0 +1,98 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended",
+        "tslint-eslint-rules"
+    ],
+    "jsRules": {},
+    "rules": {
+        "align": [true,
+            "statements", "members", "elements"
+        ],
+        "ban-comma-operator": true,
+        "cyclomatic-complexity": [true, 6],
+
+        "interface-name": [true, "never-prefix"],
+
+        "max-line-length": [true, 140],
+
+        "member-ordering": [
+            true,
+            {
+                "order":
+                [
+                    {
+                        "name": "fields",
+                        "kinds": [
+                            "static-field",
+                            "instance-field"
+                        ]
+                    },
+                    "constructor",
+                    {
+                        "name": "methods",
+                        "kinds": [
+                            "static-method",
+                            "instance-method"
+                        ]
+                    }
+                ]
+            }
+        ],
+
+        "no-bitwise": false,
+        "no-consecutive-blank-lines": [true, 2],
+        "no-duplicate-imports": true,
+        "no-empty": false,
+        "no-for-in-array": true,
+        // "no-implicit-dependencies": true,
+        "no-import-side-effect": true,
+        "no-parameter-reassignment": true,
+        "no-require-imports": true,
+        "no-switch-case-fall-through": true,
+        "no-this-assignment": true,
+        "no-unnecessary-class": true,
+        "no-unnecessary-type-assertion": true,
+        "no-var-requires": true,
+
+        "object-literal-sort-keys": [true, "match-declaration-order", "shorthand-first"],
+        "prefer-conditional-expression": [true, "check-else-if"],
+        "prefer-object-spread": true,
+
+        "quotemark": [true, "single", "avoid-escape"],
+        "radix": true,
+
+        "trailing-comma": [true, { "multiline": "never", "singleline": "never"} ],
+
+        "variable-name": [
+            true,
+            "check-format",
+            "allow-leading-underscore"
+        ],
+
+        "whitespace": [true,
+            "check-branch", "check-decl", "check-operator", "check-module", "check-separator",
+            "check-rest-spread", "check-type", "check-typecast", "check-type-operator", "check-preblock"
+        ],
+
+        // tslint-eslint
+        "no-multi-spaces": true,
+        "space-in-parens": [true, "never"],
+        "ter-arrow-spacing": [true, {
+            "before": true,
+            "after": true
+        }],
+        "ter-func-call-spacing": "never",
+        "ter-indent": [true, 4, { "SwitchCase": 1 }],
+        "ter-no-irregular-whitespace": [true],
+
+        // RXJS rules
+        "rxjs-collapse-imports": true,
+        "rxjs-pipeable-operators-only": true,
+        "rxjs-no-static-observable-methods": true,
+        "rxjs-proper-imports": true
+    },
+    "rulesDirectory": [
+        "node_modules/rxjs-tslint"
+    ]
+}
