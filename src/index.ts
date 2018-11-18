@@ -1,2 +1,3 @@
 // Barrel file
-console.log('hello world');
+
+export { printAPIEffects } from './apiEffectLogger';
