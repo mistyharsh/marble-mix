@@ -1,6 +1,6 @@
 {
     "name": "marble-mix",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Utilities for Marble.js",
     "main": "index.js",
     "types": "index.d.ts",
@@ -22,17 +22,14 @@
         "url": "https://github.com/mistyharsh/marble-mix/issues"
     },
     "homepage": "https://github.com/mistyharsh/marble-mix#readme",
-
     "dependencies": {
         "chalk": "^2.4.1",
         "table": "^5.1.0"
     },
-
     "peerDependencies": {
         "@marblejs/core": "*",
         "rxjs": "*"
     },
-
     "devDependencies": {
         "@types/jest": "^23.3.9",
         "@types/node": "^10.12.9",
