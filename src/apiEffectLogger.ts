@@ -34,7 +34,7 @@ function flatten(effects: Routes, prefix: string = '', routes: FlatRoute[] = [])
         if (isRouteEffectGroup(x)) {
             flatten(x.effects, routePath, routes);
         } else {
-            routes.push({ path: routePath, method: x.method.toUpperCase() })
+            routes.push({ path: routePath, method: x.method.toUpperCase() });
         }
     });
 
@@ -45,9 +45,10 @@ function isRouteEffectGroup(x: any): x is RouteEffectGroup {
     return Array.isArray(x.effects) && Array.isArray(x.middlewares);
 }
 
-function sortPaths(a: string, b: string) {
-    a = a.toLowerCase();
-    b = b.toLowerCase();
+function sortPaths(first: string, second: string) {
+    const a = first.toLowerCase();
+    const b = second.toLowerCase();
+
     return a > b ? 1 : b > a ? -1 : 0;
 }
 
