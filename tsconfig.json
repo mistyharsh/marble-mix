@@ -3,6 +3,7 @@
         /* Basic Options */
         "target": "ES2018",
         "module": "commonjs",
+        "declaration": true,
         "sourceMap": true,
         "outDir": "./dist",
         // "composite": true,                     /* Enable project compilation */
