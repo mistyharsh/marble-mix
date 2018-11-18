@@ -4,7 +4,20 @@ Common Utilities for [Marble.js](https://github.com/marblejs/marble)
 ## API Effect Logger
 A simple Marble.js utility to display the routes table to console at startup. This is mostly used by developers to verify if they have setup the routing correctly.
 
-### Example
+### Usage
+Install using `npm install --save marble-mix`;
+
+In your, `main.ts` or `index.ts`, before you initialize HTTP Server:
+
+```typescript
+printAPIEffects(routeEffects);
+
+const httpServer = http
+  .createServer({ middlewares: [], routeEffects })
+  .listen(PORT, HOSTNAME);
+```
+
+### Examples
 
 Consider the follow API endpoint effects or routes:
 ```typescript
@@ -27,7 +40,7 @@ const routeEffects = [route1, route2];
 // Print API Endpoints to console.
 printAPIEffects(routeEffects);
 ```
-It should show routes on the console:
+It should show the routes on the console:
 
 ![Simple Routes](images/simple-routes.png)
 
