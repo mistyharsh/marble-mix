@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { makeStatic$ } from '../../src';
 
 const staticServer$ = makeStatic$({
+    fallthrough: true,
     root: path.join(__dirname, '../../assets')
 });
 

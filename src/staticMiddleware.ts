@@ -1,34 +1,60 @@
 
-import path from 'path';
+import { Stats } from 'fs';
 
 import { Effect, HttpRequest, HttpResponse } from '@marblejs/core';
-import { fromEvent, Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
-import send from 'send';
+import { Observable, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import send, { SendOptions } from 'send';
 
-export interface StaticMiddlewareOpts {
-    root: string;
-    data?: any;
+export type Header = [string, string];
+export type Headers = Header[];
+
+export interface StaticMiddlewareOpts extends SendOptions {
+    fallthrough?: boolean;
+    headers?: (requestPath: string, status: any) => Array<[string, string]>;
 }
 
-function sendP(request: HttpRequest, response: HttpResponse, options: any): Observable<HttpRequest> {
+function setHeaders(response: any, headers: Headers) {
+    headers.forEach(([key, value]: Header) => response.setHeader(key, value));
+}
 
-    const responseStream = send(request, request.url, options).pipe(response);
+// https://www.bennadel.com/blog/2823-does-the-http-response-stream-need-error-event-handlers-in-node-js.htm
+// https://stackoverflow.com/q/53455973/5723098
+// Following event handlers are critical
+// File read stream - error
+// Http response stream - finish
+function sendP(request: HttpRequest, response: HttpResponse, options: StaticMiddlewareOpts): Promise<HttpRequest> {
 
-    return fromEvent(responseStream, 'finish').pipe(take(1)) as any;
+    return new Promise((resolve, reject) => {
+        const readStream = send(request, request.url, options);
+
+        // TODO: Decorate request with error object and then forward to route effect
+        if (options.fallthrough) {
+            readStream.on('error', () => reject(request));
+        }
+
+        // If custom headers, then set them here
+        if (options.headers) {
+            const headers = options.headers;
+            const callback = (res: HttpResponse, requestPath: string, stats: Stats) => setHeaders(res, headers(requestPath, stats));
+            readStream.on('headers', callback);
+        }
+
+        const responseStream = readStream.pipe(response);
+
+        // File response is written to the client and hence resolve the request
+        responseStream.on('finish', () => resolve(request));
+
+    });
 }
 
 export function makeStatic$(options: StaticMiddlewareOpts): Effect<HttpRequest> {
 
     const static$: Effect<HttpRequest> = (req$: Observable<HttpRequest>, res: HttpResponse) => {
 
-        const fileToServe = path.join(__dirname, '../assets/public/test.html');
-
-        const _opts = { root: options.root };
-
         return req$.pipe(
-            switchMap((x) => sendP(x, res, _opts))
-        );
+            switchMap((x) => sendP(x, res, options)),
+            catchError((x) => of(x)));
     };
 
     return static$;
