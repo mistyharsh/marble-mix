@@ -3,10 +3,10 @@ import path from 'path';
 import { combineRoutes, EffectFactory, httpListener, use } from '@marblejs/core';
 import { map, switchMap } from 'rxjs/operators';
 
-import { makeStatic$, replyFile } from '../../src';
+import { replyFile, serveDirectory } from '../../src';
 
 // Middleware with custom params and fallthrough
-const fallthroughMiddleware = makeStatic$({
+const fallthroughMiddleware = serveDirectory({
     fallthrough: true,
     params: ['dir'],
     root: path.join(__dirname, '../../assets/public')
@@ -21,7 +21,7 @@ const staticDirCustomError = EffectFactory
         map(() => ({ body: 'fallthrough-response', status: 404 }))));
 
 // Catch all middleware
-const defaultMiddleware = makeStatic$({
+const defaultMiddleware = serveDirectory({
     fallthrough: false,
     root: path.join(__dirname, '../../assets')
 });

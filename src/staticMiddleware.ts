@@ -55,7 +55,7 @@ export function sendP(request: HttpRequest, response: HttpResponse,
     });
 }
 
-export function makeStatic$(options: StaticMiddlewareOpts): Effect<HttpRequest> {
+export function serveDirectory(options: StaticMiddlewareOpts): Effect<HttpRequest> {
 
     const static$: Effect<HttpRequest> = (req$: Observable<HttpRequest>, res: HttpResponse) => {
 
