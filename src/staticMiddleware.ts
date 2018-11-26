@@ -10,8 +10,13 @@ export type Header = [string, string];
 export type Headers = Header[];
 
 export interface StaticMiddlewareOpts extends SendOptions {
+    // If error in finding requested file, then forward the request and let user handle it
     fallthrough?: boolean;
+
+    // If you need to send custom headers, use this function
     headers?: (requestPath: string, status: any) => Array<[string, string]>;
+
+    // Which parameters should participate in serving static file
     params?: string[];
 }
 
@@ -55,7 +60,7 @@ export function sendP(request: HttpRequest, response: HttpResponse,
     });
 }
 
-export function serveDirectory(options: StaticMiddlewareOpts): Effect<HttpRequest> {
+export function serveDirectory(options?: StaticMiddlewareOpts): Effect<HttpRequest> {
 
     const static$: Effect<HttpRequest> = (req$: Observable<HttpRequest>, res: HttpResponse) => {
 
