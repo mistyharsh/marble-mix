@@ -24,13 +24,14 @@ function setHeaders(response: any, headers: Headers) {
 // Following event handlers are critical
 // File read stream - error
 // Http response stream - finish
-function sendP(request: HttpRequest, response: HttpResponse, options: StaticMiddlewareOpts): Promise<HttpRequest> {
+export function sendP(request: HttpRequest, response: HttpResponse,
+    options: StaticMiddlewareOpts = {}, urlPath: string = request.url): Promise<HttpRequest> {
 
     return new Promise((resolve, reject) => {
 
         const rquestUrl = options.params
             ? options.params.map((x) => request.params[x]).join('/')
-            : request.url;
+            : urlPath;
 
         const readStream = send(request, rquestUrl, options);
 
