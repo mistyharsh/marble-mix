@@ -5,8 +5,23 @@ import { map } from 'rxjs/operators';
 
 import { makeStatic$ } from '../../src';
 
-const staticServer$ = makeStatic$({
+// Middleware with custom params and fallthrough
+const staticFallthroughMiddleware = makeStatic$({
     fallthrough: true,
+    params: ['dir'],
+    root: path.join(__dirname, '../../assets/public')
+});
+
+const staticFilesCustomError = EffectFactory
+    .matchPath('/fallthrough/:dir*')
+    .matchType('GET')
+    .use((req$, res) => req$.pipe(
+        use(staticFallthroughMiddleware, res),
+        map(() => ({ body: 'fallthrough-response', status: 404 }))));
+
+// Catch all middleware
+const staticDefaultMiddleware = makeStatic$({
+    fallthrough: false,
     root: path.join(__dirname, '../../assets')
 });
 
@@ -14,13 +29,9 @@ const staticFiles = EffectFactory
     .matchPath('/:dir*')
     .matchType('GET')
     .use((req$, res) => req$.pipe(
-        use(staticServer$, res),
-        map(() => {
-            // TODO: Pending work
-            return { body: 'FALLTHROUGH' };
-        })
-    ));
+        use(staticDefaultMiddleware, res),
+        map(() => ({}))));
 
-const file$ = combineRoutes('/public', [staticFiles]);
+const file$ = combineRoutes('/public', [staticFilesCustomError, staticFiles]);
 
 export const app = httpListener({ effects: [file$], middlewares: [] });

@@ -12,6 +12,7 @@ export type Headers = Header[];
 export interface StaticMiddlewareOpts extends SendOptions {
     fallthrough?: boolean;
     headers?: (requestPath: string, status: any) => Array<[string, string]>;
+    params?: string[];
 }
 
 function setHeaders(response: any, headers: Headers) {
@@ -26,7 +27,12 @@ function setHeaders(response: any, headers: Headers) {
 function sendP(request: HttpRequest, response: HttpResponse, options: StaticMiddlewareOpts): Promise<HttpRequest> {
 
     return new Promise((resolve, reject) => {
-        const readStream = send(request, request.url, options);
+
+        const rquestUrl = options.params
+            ? options.params.map((x) => request.params[x]).join('/')
+            : request.url;
+
+        const readStream = send(request, rquestUrl, options);
 
         // TODO: Decorate request with error object and then forward to route effect
         if (options.fallthrough) {
