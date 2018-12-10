@@ -37,7 +37,7 @@ printAPIEffects(routeEffects);
 ```
 It should show the routes on the console:
 
-![Simple Routes](images/simple-routes.png)
+![Simple Routes](./../images/simple-routes.png)
 
 A more complex example is:
 
@@ -91,4 +91,4 @@ const routes = printAPIEffects([allRoutes$]);
 
 It should print:
 
-![Complex Routes](images/complex-routes.png)
+![Complex Routes](./../images/complex-routes.png)

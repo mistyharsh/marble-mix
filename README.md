@@ -3,6 +3,7 @@ Common Utilities for [Marble.js](https://github.com/marblejs/marble). It provide
   1. [Static directory serving middleware](./docs/directory.md)
   2. [File serving helper](./docs/file.md)
   3. [API Effect logger](./docs/effectLogger.md)
+  4. [HTTP Redirect utilities](./docs/redirect.md)
 
 Middleware for streaming files and directories streaming is build on-top of awesome [send](https://github.com/pillarjs/send) library.
 
