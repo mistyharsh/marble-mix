@@ -22,6 +22,7 @@
         "url": "https://github.com/mistyharsh/marble-mix/issues"
     },
     "homepage": "https://github.com/mistyharsh/marble-mix#readme",
+    "keywords": ["marblejs", "rxjs", "static", "marblejs-plugin"],
     "dependencies": {
         "@types/send": "^0.14.4",
         "chalk": "^2.4.1",
