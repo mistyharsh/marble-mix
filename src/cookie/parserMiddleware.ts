@@ -1,6 +1,6 @@
-import { Effect, HttpRequest, HttpResponse } from '@marblejs/core';
+import { HttpRequest, HttpResponse } from '@marblejs/core';
 import { defer, Observable, of } from 'rxjs';
-import { catchError, map, mapTo, switchMap, tap } from 'rxjs/operators';
+import { catchError, mapTo, switchMap, tap } from 'rxjs/operators';
 
 // @ts-ignore
 import Statehood from 'statehood';
@@ -16,12 +16,9 @@ export interface HttpRequestWithState extends HttpRequest {
     state: any;
 }
 
-export const enum CookieError {
-    ignore = 'ignore',
-    error = 'error'
-}
+export type CookieError = 'ignore' | 'error';
 
-export function cookieParser(action: CookieError = CookieError.ignore) {
+export function cookieParser(action: CookieError = 'error') {
 
     const definitions = new Statehood.Definitions();
 
@@ -34,7 +31,7 @@ export function cookieParser(action: CookieError = CookieError.ignore) {
                 // If there is any error and we are ignoring it, send empty cookie object
                 // Otherwise, send 400 response
                 catchError((_err) => {
-                    return action === CookieError.ignore
+                    return action === 'ignore'
                         ? of({ states: {} }) : res.send({ status: 400 });
                 }),
 

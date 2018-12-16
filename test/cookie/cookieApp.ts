@@ -8,15 +8,17 @@ const cookieEffect = EffectFactory
     .matchPath('/cookie-path')
     .matchType('GET')
     .use((req$, res) => req$.pipe(
-        use(cookieParser(CookieError.ignore), res),
+        use(cookieParser('ignore'), res),
         map((req) => ({ body: JSON.stringify(req.state), code: 200 }))));
+
 
 const cookieErrorEffect = EffectFactory
     .matchPath('/cookie-path-error')
     .matchType('GET')
     .use((req$, res) => req$.pipe(
-        use(cookieParser(CookieError.error), res),
+        use(cookieParser('error'), res),
         map((req) => ({ body: JSON.stringify(req.state), code: 200 }))));
+
 
 const effects = [cookieEffect, cookieErrorEffect];
 
