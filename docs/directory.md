@@ -1,6 +1,8 @@
 # Directory Serving middleware
 `marble-mix` provides a request pipeline middleware for serving static directory on a given route.
 
+Middleware for streaming files and directories streaming is build on-top of awesome [send](https://github.com/pillarjs/send) library.
+
 ## Usage
 
 In the following example, any `GET` request to `/public/:dir*` will serve files from `assets` folder. Assuming you have `main.ts` file, create `assets/public/` folder and few sample files inside the `public` folder.
