@@ -14,6 +14,7 @@ describe('make() function', () => {
 
 });
 
+
 describe('body() function', () => {
 
     test('returns Observable<EffectResponse> with given string body', () =>
@@ -27,6 +28,37 @@ describe('body() function', () => {
             mr.body({ data: 10 }))
             .toPromise()
             .then((x) => expect(x.body).toContain('{"data":10}')));
+});
+
+
+describe('code() function', () => {
+
+    test('returns Observable<EffectResponse> with given status code', () =>
+        mr.make().pipe(
+            mr.code(400))
+            .toPromise()
+            .then((x) => expect(x.status).toEqual(400)));
+
+    test('returns Observable<EffectResponse> with serialized body', () =>
+        mr.make(204).pipe(
+            mr.code(200))
+            .toPromise()
+            .then((x) => expect(x.status).toEqual(200)));
+});
+
+
+describe('created() function', () => {
+
+    test('returns Observable<EffectResponse> with given 201 status and location header', () =>
+        mr.make().pipe(
+            mr.created('/relative-redirect'))
+            .toPromise()
+            .then((x) => expect(x).toEqual({
+                status: 201,
+                headers: {
+                    location: '/relative-redirect'
+                }
+            })));
 });
 
 
@@ -82,6 +114,7 @@ describe('header() function', () => {
             })));
 });
 
+
 describe('headers() function', () => {
 
     test('returns headers object by reducing over a list', () =>
@@ -97,4 +130,25 @@ describe('headers() function', () => {
                 'x-range': 'items=30',
                 'x-count': '100'
             })));
+});
+
+
+describe('location() function', () => {
+
+    test('returns headers with location', () =>
+        mr.make().pipe(
+            mr.location('http://example.com/redirect-path'))
+            .toPromise()
+            .then((x) => expect(x.headers).toEqual({
+                location: 'http://example.com/redirect-path'
+            })));
+
+    test('handle multiple location headers', () =>
+            mr.make().pipe(
+                mr.location('http://example.com/redirect-path'),
+                mr.location('http://example.com/redirect-path-new'))
+                .toPromise()
+                .then((x) => expect(x.headers).toEqual({
+                    location: 'http://example.com/redirect-path-new'
+                })));
 });

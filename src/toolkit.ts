@@ -24,9 +24,14 @@ export function body(value: object | string): Pipeable {
 
 export function charset() {}
 
-export function code() {}
+export function code(statusCode: HttpStatus): Pipeable {
+    return (source) => source.pipe(
+        map((x) => ({ ...x, status: statusCode })));
+}
 
-export function created(uri: string) { }
+export function created(uri: string): Pipeable {
+    return (source) => source.pipe(code(201), location(uri));
+}
 
 export function header(key: string, value: string, opts?: Partial<HeaderOpts>): Pipeable {
     return (source) => source.pipe(
@@ -38,7 +43,9 @@ export function headers(list: MultipleHeaders): Pipeable {
         map((x) => list.reduce((y, z) => setHeader(z[0], z[1], y, z[2]), x)));
 }
 
-export function location() {}
+export function location(uri: string): Pipeable {
+    return header('location', uri, { override: true });
+}
 
 export function make(statusCode: HttpStatus = HttpStatus.OK): Observable<EffectResponse> {
     return of({ status: statusCode });
