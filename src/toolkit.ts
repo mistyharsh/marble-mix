@@ -1,9 +1,21 @@
 import { EffectResponse, HttpStatus } from '@marblejs/core';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { defer, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+
+// @ts-ignore
+import Statehood from 'statehood';
 
 export type Response$ = Observable<EffectResponse>;
 export type Pipeable = (source: Response$) => Response$;
+
+export interface CookieOptions {
+    ttl?: number | null;
+    isSecure?: boolean;
+    isHttpOnly?: boolean;
+    isSameSite?: false | 'Strict' | 'Lax';
+    path?: string | null;
+    domain?: string | null;
+}
 
 export interface HeaderOpts {
     append: boolean;
@@ -14,6 +26,15 @@ export interface HeaderOpts {
 export type MultipleHeaders = Array<[string, string, HeaderOpts?]>;
 
 const defaultHeaderOpts: HeaderOpts = { append: false, separator: ',', override: true };
+
+const defaultCookieOpts: CookieOptions = {
+    ttl: null,
+    isSecure: true,
+    isHttpOnly: true,
+    isSameSite: 'Strict',
+    path: null,
+    domain: null
+};
 
 export function body(value: object | string): Pipeable {
     return (source) => source.pipe(
@@ -51,11 +72,25 @@ export function make(statusCode: HttpStatus = HttpStatus.OK): Observable<EffectR
     return of({ status: statusCode });
 }
 
-export function state() {}
+export function state(name: string, value: string, options?: Partial<CookieOptions>): Pipeable {
+
+    const opts: CookieOptions = { ...defaultCookieOpts, ...options };
+    const definitions = new Statehood.Definitions();
+
+    return (source) => source.pipe(
+        switchMap((x) => defer(() => definitions.format({ name, value, options: opts })).pipe(
+            map((cookies) => setCookieHeader((cookies as any[])[0], x)))));
+}
 
 export function type() {}
 
-export function unstate() {}
+export function unstate(name: string, options?: Partial<CookieOptions>): Pipeable {
+
+    // Set the ttl to 0 means remove the cookie
+    const opts = { ...options, ttl: 0 };
+
+    return state(name, '', opts);
+}
 
 function findHeader(key: string, record?: Record<string, string>) {
     return (record && record[key]) || null;
@@ -85,6 +120,27 @@ function setHeader(key: string, value: string, x: EffectResponse, options?: Part
         return { ...x, headers: { ...x.headers, [key]: value } };
     }
 
+}
+
+function setCookieHeader(formattedCookie: string, x: EffectResponse): EffectResponse {
+
+    const existing = x.headers && x.headers['set-cookie'] as string | undefined | string[];
+
+    if (!existing) {
+        return { ...x, headers: { ...x.headers, 'set-cookie': [formattedCookie] } as any };
+    } else if (existing instanceof Array) {
+
+        const newValue = existing.concat(formattedCookie) as any;
+
+        return { ...x, headers: { ...x.headers, 'set-cookie': newValue } };
+    } else if (typeof existing === 'string') {
+
+        const newValue = [existing, formattedCookie] as any;
+
+        return { ...x, headers: { ...x.headers, 'set-cookie': newValue } };
+    }
+
+    return x;
 }
 
 const mr = {
