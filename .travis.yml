@@ -13,7 +13,7 @@ before_install:
 
 install:
     - npm install
-    - npx run peer
+    - npm run peer
 
 script:
     - npm test
