@@ -17,4 +17,6 @@ Even if the library is written in TypeScript, it is published as CommonJS module
   - Documentation
 
 ## Coverage
+[![Build Status](https://travis-ci.com/mistyharsh/marble-mix.svg?branch=master)](https://travis-ci.com/mistyharsh/marble-mix)
+
 [![Coverage Status](https://coveralls.io/repos/github/mistyharsh/marble-mix/badge.svg?branch=master)](https://coveralls.io/github/mistyharsh/marble-mix?branch=master)
