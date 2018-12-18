@@ -1,14 +1,14 @@
-import { mr } from '../src';
+import { m } from '../src';
 
 describe('make() function', () => {
 
     test('returns Observable<EffectResponse> with default 200 status code', () =>
-        mr.make()
+        m.make()
             .toPromise()
             .then((x) => expect(x).toEqual({ status: 200 })));
 
     test('returns Observable<EffectResponse>', () =>
-        mr.make(201)
+        m.make(201)
             .toPromise()
             .then((x) => expect(x).toEqual({ status: 201 })));
 
@@ -18,14 +18,14 @@ describe('make() function', () => {
 describe('body() function', () => {
 
     test('returns Observable<EffectResponse> with given string body', () =>
-        mr.make().pipe(
-            mr.body('hello-response'))
+        m.make().pipe(
+            m.body('hello-response'))
             .toPromise()
             .then((x) => expect(x).toMatchObject({ body: 'hello-response' })));
 
     test('returns Observable<EffectResponse> with serialized body', () =>
-        mr.make().pipe(
-            mr.body({ data: 10 }))
+        m.make().pipe(
+            m.body({ data: 10 }))
             .toPromise()
             .then((x) => expect(x.body).toContain('{"data":10}')));
 });
@@ -34,14 +34,14 @@ describe('body() function', () => {
 describe('code() function', () => {
 
     test('returns Observable<EffectResponse> with given status code', () =>
-        mr.make().pipe(
-            mr.code(400))
+        m.make().pipe(
+            m.code(400))
             .toPromise()
             .then((x) => expect(x.status).toEqual(400)));
 
     test('returns Observable<EffectResponse> with serialized body', () =>
-        mr.make(204).pipe(
-            mr.code(200))
+        m.make(204).pipe(
+            m.code(200))
             .toPromise()
             .then((x) => expect(x.status).toEqual(200)));
 });
@@ -50,8 +50,8 @@ describe('code() function', () => {
 describe('created() function', () => {
 
     test('returns Observable<EffectResponse> with given 201 status and location header', () =>
-        mr.make().pipe(
-            mr.created('/relative-redirect'))
+        m.make().pipe(
+            m.created('/relative-redirect'))
             .toPromise()
             .then((x) => expect(x).toEqual({
                 status: 201,
@@ -68,9 +68,9 @@ describe('header() function', () => {
     const overrideHeaders = { append: true, override: true };
 
     test('returns appropriate header object', () =>
-        mr.make().pipe(
-            mr.header('accept', 'text/html'),
-            mr.header('x-meta', 'custom-header'))
+        m.make().pipe(
+            m.header('accept', 'text/html'),
+            m.header('x-meta', 'custom-header'))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 'accept': 'text/html',
@@ -78,35 +78,35 @@ describe('header() function', () => {
             })));
 
     test('returns header with append mode', () =>
-        mr.make().pipe(
-            mr.header('accept', 'text/html'),
-            mr.header('accept', 'text/plain', appendHeaders))
+        m.make().pipe(
+            m.header('accept', 'text/html'),
+            m.header('accept', 'text/plain', appendHeaders))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 accept: 'text/html,text/plain'
             })));
 
     test('returns header with override mode', () =>
-        mr.make().pipe(
-            mr.header('accept', 'text/html'),
-            mr.header('accept', 'application/json'),
-            mr.header('accept', 'text/plain', overrideHeaders))
+        m.make().pipe(
+            m.header('accept', 'text/html'),
+            m.header('accept', 'application/json'),
+            m.header('accept', 'text/plain', overrideHeaders))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({ accept: 'text/plain' })));
 
     test('returns header with custom seprator', () =>
-        mr.make().pipe(
-            mr.header('accept', 'text/html'),
-            mr.header('accept', 'text/plain', { append: true, separator: '||', override: false }))
+        m.make().pipe(
+            m.header('accept', 'text/html'),
+            m.header('accept', 'text/plain', { append: true, separator: '||', override: false }))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({ accept: 'text/html||text/plain' })));
 
     test('returns header with mixed combinations', () =>
-        mr.make().pipe(
-            mr.header('accept', 'text/html'),
-            mr.header('accept', 'text/plain', { append: true, override: false }),
-            mr.header('x-range', 'items=10'),
-            mr.header('x-range', 'items=30'))
+        m.make().pipe(
+            m.header('accept', 'text/html'),
+            m.header('accept', 'text/plain', { append: true, override: false }),
+            m.header('x-range', 'items=10'),
+            m.header('x-range', 'items=30'))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 'accept': 'text/html,text/plain',
@@ -118,8 +118,8 @@ describe('header() function', () => {
 describe('headers() function', () => {
 
     test('returns headers object by reducing over a list', () =>
-        mr.make().pipe(
-            mr.headers([
+        m.make().pipe(
+            m.headers([
                 ['accept', 'text/html'],
                 ['x-range', 'items=30'],
                 ['x-count', '100']
@@ -136,17 +136,17 @@ describe('headers() function', () => {
 describe('location() function', () => {
 
     test('returns headers with location', () =>
-        mr.make().pipe(
-            mr.location('http://example.com/redirect-path'))
+        m.make().pipe(
+            m.location('http://example.com/redirect-path'))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 location: 'http://example.com/redirect-path'
             })));
 
     test('handle multiple location headers', () =>
-            mr.make().pipe(
-                mr.location('http://example.com/redirect-path'),
-                mr.location('http://example.com/redirect-path-new'))
+            m.make().pipe(
+                m.location('http://example.com/redirect-path'),
+                m.location('http://example.com/redirect-path-new'))
                 .toPromise()
                 .then((x) => expect(x.headers).toEqual({
                     location: 'http://example.com/redirect-path-new'
@@ -156,16 +156,16 @@ describe('location() function', () => {
 describe('state() function', () => {
 
     test('return simple cookie with default options', () =>
-        mr.make().pipe(
-            mr.state('hello', 'world'))
+        m.make().pipe(
+            m.state('hello', 'world'))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 'set-cookie': ['hello=world; Secure; HttpOnly; SameSite=Strict']
             })));
 
     test('return cookie with custom time to live', () => {
-        return mr.make().pipe(
-            mr.state('hello', 'world', { ttl: 3600 }))
+        return m.make().pipe(
+            m.state('hello', 'world', { ttl: 3600 }))
             .toPromise()
             .then((x) => {
                 const time = new Date(Date.now() + 3600);
@@ -176,9 +176,9 @@ describe('state() function', () => {
     });
 
     test('return multiple cookies cookie with default options', () =>
-        mr.make().pipe(
-            mr.state('hello', 'world'),
-            mr.state('welcome', 'engineer'))
+        m.make().pipe(
+            m.state('hello', 'world'),
+            m.state('welcome', 'engineer'))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 'set-cookie': [
@@ -191,8 +191,8 @@ describe('state() function', () => {
 describe('unstate() function', () => {
 
     test('return expired cookie with default options', () =>
-        mr.make().pipe(
-            mr.unstate('hello'))
+        m.make().pipe(
+            m.unstate('hello'))
             .toPromise()
             .then((x) => expect(x.headers).toEqual({
                 'set-cookie': ['hello=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict']

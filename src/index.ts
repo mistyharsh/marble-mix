@@ -7,4 +7,4 @@ export { redirect } from './redirect';
 export { cookieParser, CookieError } from './cookie/parserMiddleware';
 
 /* EXPERIMENTAL UNDOCUMENTED STUFF. DON'T USE IT YET. */
-export { default as mr } from './toolkit';
+export { default as m } from './toolkit';
