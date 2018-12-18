@@ -10,3 +10,6 @@ Common Utilities for [Marble.js](https://github.com/marblejs/marble). It provide
 Install using `npm install --save marble-mix;`
 
 Even if the library is written in TypeScript, it is published as CommonJS module and hence can be used directly from Node.js code without any compilation.
+
+## Coverage
+[![Coverage Status](https://coveralls.io/repos/github/mistyharsh/marble-mix/badge.svg?branch=master)](https://coveralls.io/github/mistyharsh/marble-mix?branch=master)

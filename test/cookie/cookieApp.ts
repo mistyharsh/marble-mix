@@ -2,7 +2,6 @@ import { EffectFactory, httpListener, use } from '@marblejs/core';
 import { map } from 'rxjs/operators';
 
 import { cookieParser } from '../../src';
-import { CookieError } from '../../src/cookie/parserMiddleware';
 
 const cookieEffect = EffectFactory
     .matchPath('/cookie-path')

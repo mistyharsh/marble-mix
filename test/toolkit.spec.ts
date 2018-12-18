@@ -152,3 +152,49 @@ describe('location() function', () => {
                     location: 'http://example.com/redirect-path-new'
                 })));
 });
+
+describe('state() function', () => {
+
+    test('return simple cookie with default options', () =>
+        mr.make().pipe(
+            mr.state('hello', 'world'))
+            .toPromise()
+            .then((x) => expect(x.headers).toEqual({
+                'set-cookie': ['hello=world; Secure; HttpOnly; SameSite=Strict']
+            })));
+
+    test('return cookie with custom time to live', () => {
+        return mr.make().pipe(
+            mr.state('hello', 'world', { ttl: 3600 }))
+            .toPromise()
+            .then((x) => {
+                const time = new Date(Date.now() + 3600);
+                expect(x.headers).toEqual({
+                    'set-cookie': [`hello=world; Max-Age=3; Expires=${time.toUTCString()}; Secure; HttpOnly; SameSite=Strict`]
+                });
+            });
+    });
+
+    test('return multiple cookies cookie with default options', () =>
+        mr.make().pipe(
+            mr.state('hello', 'world'),
+            mr.state('welcome', 'engineer'))
+            .toPromise()
+            .then((x) => expect(x.headers).toEqual({
+                'set-cookie': [
+                    'hello=world; Secure; HttpOnly; SameSite=Strict',
+                    'welcome=engineer; Secure; HttpOnly; SameSite=Strict'
+                ]
+            })));
+});
+
+describe('unstate() function', () => {
+
+    test('return expired cookie with default options', () =>
+        mr.make().pipe(
+            mr.unstate('hello'))
+            .toPromise()
+            .then((x) => expect(x.headers).toEqual({
+                'set-cookie': ['hello=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict']
+            })));
+});
