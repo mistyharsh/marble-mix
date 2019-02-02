@@ -5,6 +5,7 @@ Common Utilities for [Marble.js](https://github.com/marblejs/marble). It provide
   3. [API effect logger](./docs/effectLogger.md)
   4. [HTTP redirect utilities](./docs/redirect.md)
   5. [Cookie parser middleware](./docs/cookie.md)
+  6. [Toolkit](./docs/toolkit.md)
 
 ## Installation
 Install using `npm install --save marble-mix;`
