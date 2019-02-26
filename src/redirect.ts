@@ -1,13 +1,13 @@
-import { EffectResponse } from '@marblejs/core';
+import { HttpEffectResponse } from '@marblejs/core';
 
-function _temporary(url: string, writable: boolean = true): EffectResponse {
+function _temporary(url: string, writable: boolean = true): HttpEffectResponse {
     const status = writable ? 303 : 307;
     const location = url;
 
     return { status, headers: { location } };
 }
 
-function _permanent(url: string, writable: boolean = true): EffectResponse {
+function _permanent(url: string, writable: boolean = true): HttpEffectResponse {
     const status = writable ? 301 : 308;
     const location = url;
 
@@ -18,9 +18,9 @@ function _permanent(url: string, writable: boolean = true): EffectResponse {
 /**
  * @export Traditional HTTP `302 Found` response with Location header set to url.
  * @param {string} url set `Location` header to url.
- * @returns {EffectResponse} Marble.js `EffectResponse` with status as 302.
+ * @returns {HttpEffectResponse} Marble.js `HttpEffectResponse` with status as 302.
  */
-export function redirect(url: string): EffectResponse {
+export function redirect(url: string): HttpEffectResponse {
     const location = url;
 
     return { status: 302, headers: { location } };
@@ -33,7 +33,7 @@ export function redirect(url: string): EffectResponse {
  * @param {string} url Set `Location` header to url.
  * @param {boolean} [writable=true] If true means original `POST/PUT/DELETE` will be followed by `GET` on redirect
  * by the client by setting the status code as `303`.
- * @returns {EffectResponse}
+ * @returns {HttpEffectResponse}
  */
 redirect.temporary = _temporary;
 
@@ -42,6 +42,6 @@ redirect.temporary = _temporary;
  * @param {string} url Set `Location` header to url.
  * @param {boolean} [writable=true] If true means original `POST/PUT/DELETE` will be followed by `GET` on redirect
  * by the client by setting the status code as `301`.
- * @returns {EffectResponse}
+ * @returns {HttpEffectResponse}
  */
 redirect.permanent = _permanent;

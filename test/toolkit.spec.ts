@@ -27,7 +27,7 @@ describe('body() function', () => {
         m.make().pipe(
             m.body({ data: 10 }))
             .toPromise()
-            .then((x) => expect(x.body).toContain('{"data":10}')));
+            .then((x) => expect(x.body).toEqual({ data: 10 })));
 });
 
 

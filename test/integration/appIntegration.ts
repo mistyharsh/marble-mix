@@ -1,6 +1,7 @@
+import { createServer } from 'http';
 import path from 'path';
 
-import { combineRoutes, EffectFactory, httpListener, use } from '@marblejs/core';
+import { combineRoutes, createContext, EffectFactory, httpListener, use } from '@marblejs/core';
 import { map, switchMap } from 'rxjs/operators';
 
 import { replyFile, serveDirectory } from '../../src';
@@ -52,4 +53,8 @@ const singleFileNonExist = EffectFactory
 
 const staticFile$ = combineRoutes('/public', [staticDirCustomError, staticDirEffect]);
 
-export const app = httpListener({ effects: [staticFile$, singleFile, singleFileNonExist], middlewares: [] });
+export const listener = httpListener({ effects: [staticFile$, singleFile, singleFileNonExist], middlewares: [] })
+    .run(createContext());
+
+export const server = createServer(listener)
+    .listen(1337, '127.0.0.1');

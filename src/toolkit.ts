@@ -1,11 +1,11 @@
-import { EffectResponse, HttpStatus } from '@marblejs/core';
+import { HttpEffectResponse, HttpHeaders, HttpStatus } from '@marblejs/core';
 import { defer, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // @ts-ignore
 import Statehood from 'statehood';
 
-export type Response$ = Observable<EffectResponse>;
+export type Response$ = Observable<HttpEffectResponse>;
 export type Pipeable = (source: Response$) => Response$;
 
 export interface CookieOptions {
@@ -38,9 +38,7 @@ const defaultCookieOpts: CookieOptions = {
 
 export function body(value: object | string): Pipeable {
     return (source) => source.pipe(
-        map((x) => typeof value === 'string'
-            ? { ...x, body: value }
-            : { ...x, body: JSON.stringify(value) }));
+        map((x) => ({ ...x, body: value })));
 }
 
 export function charset() {}
@@ -68,7 +66,7 @@ export function location(uri: string): Pipeable {
     return header('location', uri, { override: true });
 }
 
-export function make(statusCode: HttpStatus = HttpStatus.OK): Observable<EffectResponse> {
+export function make(statusCode: HttpStatus = HttpStatus.OK): Observable<HttpEffectResponse> {
     return of({ status: statusCode });
 }
 
@@ -92,11 +90,11 @@ export function unstate(name: string, options?: Partial<CookieOptions>): Pipeabl
     return state(name, '', opts);
 }
 
-function findHeader(key: string, record?: Record<string, string>) {
+function findHeader(key: string, record?: HttpHeaders) {
     return (record && record[key]) || null;
 }
 
-function setHeader(key: string, value: string, x: EffectResponse, options?: Partial<HeaderOpts>): EffectResponse {
+function setHeader(key: string, value: string, x: HttpEffectResponse, options?: Partial<HeaderOpts>): HttpEffectResponse {
 
     const opts = { ...defaultHeaderOpts, ...options };
     const { append, separator, override } = opts;
@@ -122,7 +120,7 @@ function setHeader(key: string, value: string, x: EffectResponse, options?: Part
 
 }
 
-function setCookieHeader(formattedCookie: string, x: EffectResponse): EffectResponse {
+function setCookieHeader(formattedCookie: string, x: HttpEffectResponse): HttpEffectResponse {
 
     const existing = x.headers && x.headers['set-cookie'] as string | undefined | string[];
 

@@ -1,7 +1,7 @@
 
 import { Stats } from 'fs';
 
-import { Effect, HttpRequest, HttpResponse } from '@marblejs/core';
+import { HttpMiddlewareEffect, HttpRequest, HttpResponse } from '@marblejs/core';
 import { Observable, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import send, { SendOptions } from 'send';
@@ -35,7 +35,7 @@ export function sendP(request: HttpRequest, response: HttpResponse,
     return new Promise((resolve, reject) => {
 
         const rquestUrl = options.params
-            ? options.params.map((x) => request.params[x]).join('/')
+            ? options.params.map((x) => (request.params as any)[x]).join('/')
             : urlPath;
 
         const readStream = send(request, rquestUrl, options);
@@ -60,9 +60,9 @@ export function sendP(request: HttpRequest, response: HttpResponse,
     });
 }
 
-export function serveDirectory(options?: StaticMiddlewareOpts): Effect<HttpRequest> {
+export function serveDirectory(options?: StaticMiddlewareOpts): HttpMiddlewareEffect {
 
-    const static$: Effect<HttpRequest> = (req$: Observable<HttpRequest>, res: HttpResponse) => {
+    const static$: HttpMiddlewareEffect = (req$: Observable<HttpRequest>, res: HttpResponse) => {
 
         return req$.pipe(
             switchMap((x) => sendP(x, res, options)),

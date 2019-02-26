@@ -1,4 +1,6 @@
-import { EffectFactory, httpListener, use } from '@marblejs/core';
+import { createServer } from 'http';
+
+import { createContext, EffectFactory, httpListener, use } from '@marblejs/core';
 import { map } from 'rxjs/operators';
 
 import { cookieParser } from '../../src';
@@ -21,4 +23,8 @@ const cookieErrorEffect = EffectFactory
 
 const effects = [cookieEffect, cookieErrorEffect];
 
-export const app = httpListener({ effects, middlewares: [] });
+export const listener = httpListener({ effects, middlewares: [] })
+    .run(createContext());
+
+export const server = createServer(listener)
+    .listen(1337, '127.0.0.1');
