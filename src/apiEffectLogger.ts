@@ -1,7 +1,6 @@
 import * as path from 'path';
 
 import { RouteEffect, RouteEffectGroup } from '@marblejs/core';
-
 import chalk from 'chalk';
 import { table } from 'table';
 
@@ -15,7 +14,6 @@ interface FlatRoute {
 
 export function printAPIEffects(effects: Routes) {
     const flattenedRoutes = flatten(effects);
-    flattenedRoutes.sort((x, y) => sortPaths(x.path, y.path));
 
     const printData = flattenedRoutes.map((x) => ([getMethod(x.method), x.path]));
 
@@ -43,13 +41,6 @@ function flatten(effects: Routes, prefix: string = '', routes: FlatRoute[] = [])
 
 function isRouteEffectGroup(x: any): x is RouteEffectGroup {
     return Array.isArray(x.effects) && Array.isArray(x.middlewares);
-}
-
-function sortPaths(first: string, second: string) {
-    const a = first.toLowerCase();
-    const b = second.toLowerCase();
-
-    return a > b ? 1 : b > a ? -1 : 0;
 }
 
 function getMethod(x: string) {

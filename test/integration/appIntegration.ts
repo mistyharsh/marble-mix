@@ -4,13 +4,23 @@ import path from 'path';
 import { combineRoutes, createContext, EffectFactory, httpListener, use } from '@marblejs/core';
 import { map, switchMap } from 'rxjs/operators';
 
-import { replyFile, serveDirectory } from '../../src';
+import { makeGraphQLPlayground, replyFile, serveDirectory } from '../../src';
 
 // Middleware with custom params and fallthrough
 const fallthroughMiddleware = serveDirectory({
     fallthrough: true,
     params: ['dir'],
     root: path.join(__dirname, '../../assets/public')
+});
+
+// Catch all middleware
+const defaultMiddleware = serveDirectory({
+    fallthrough: false,
+    root: path.join(__dirname, '../../assets')
+});
+
+const playground = makeGraphQLPlayground({
+    endpoint: '/gql'
 });
 
 // API Effect
@@ -20,12 +30,6 @@ const staticDirCustomError = EffectFactory
     .use((req$, res) => req$.pipe(
         use(fallthroughMiddleware, res),
         map(() => ({ body: 'fallthrough-response', status: 404 }))));
-
-// Catch all middleware
-const defaultMiddleware = serveDirectory({
-    fallthrough: false,
-    root: path.join(__dirname, '../../assets')
-});
 
 // API Effect
 const staticDirEffect = EffectFactory
@@ -51,9 +55,22 @@ const singleFileNonExist = EffectFactory
         switchMap((req) => replyFile(req, res, path.join(__dirname, '../../assets', 'hello-2.txt'))
     )));
 
+const gqlPlayground$ = EffectFactory
+    .matchPath('/gql')
+    .matchType('GET')
+    .use((req$, res) => req$.pipe(
+        use(playground, res)));
+
 const staticFile$ = combineRoutes('/public', [staticDirCustomError, staticDirEffect]);
 
-export const listener = httpListener({ effects: [staticFile$, singleFile, singleFileNonExist], middlewares: [] })
+export const listener = httpListener({
+    middlewares: [],
+    effects: [
+        gqlPlayground$,
+        staticFile$,
+        singleFile,
+        singleFileNonExist
+    ]})
     .run(createContext());
 
 export const server = createServer(listener)
